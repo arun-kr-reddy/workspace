@@ -1,17 +1,16 @@
-# workspace
 - [code](#code)
 - [notes](#notes)
   - [teachyourselfcs](#teachyourselfcs)
 
-## code
+# code
 ```bash
 cd .\build\
 cmake .. -G "Visual Studio 17 2022"
 ```
 
-## notes
+# notes
 
-### teachyourselfcs
+## teachyourselfcs
 - [ ] [programming](https://www.youtube.com/playlist?list=PLhMnuBfGeCDNgVzLPxF9o5UNKG1b-LFY9)
 - [ ] [computer architecture](https://www.youtube.com/playlist?list=PLhMnuBfGeCDM8pXLpqib90mDFJI-e1lpk)
 - [ ] [math for CS](https://www.youtube.com/playlist?list=PLB7540DEDD482705B)
