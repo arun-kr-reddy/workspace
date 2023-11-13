@@ -13,9 +13,9 @@ cmake .. -G "Visual Studio 17 2022"
 ## teachyourselfcs
 - [ ] [programming](./notes/programming.md)
 - [ ] [computer architecture](https://www.youtube.com/playlist?list=PL5Q2soXY2Zi_QedyPWtRmFUJ2F8DdYP7l)
-- [ ] [math for CS](https://www.youtube.com/playlist?list=PLB7540DEDD482705B)
+- [ ] [math](https://www.youtube.com/playlist?list=PLB7540DEDD482705B)
 - [ ] [algorithms & data structures](https://www.youtube.com/playlist?list=PLOtl7M3yp-DXbHTFe_w9zFPXeau28CDao)
-- [ ] [operating systems](https://www.youtube.com/playlist?list=PLRdybCcWDFzCag9A0h1m9QYaujD0xefgM)
+- [ ] [operating systems](https://www.youtube.com/playlist?list=PLDW872573QAb4bj0URobvQTD41IV6gRkx)
 - [ ] [computer networking](https://www.youtube.com/playlist?list=PLoCMsyE1cvdWKsLVyf6cPwCLDIZnOj0NS)
 - [ ] [databases](https://www.youtube.com/playlist?list=PLhMnuBfGeCDPtyC9kUf_hG_QwjYzZ0Am1)
 - [ ] [languages & compilers](https://www.youtube.com/playlist?list=PLoCMsyE1cvdUZRe1udlyjpzTww1U5olL2)
