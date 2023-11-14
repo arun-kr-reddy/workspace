@@ -1,5 +1,6 @@
 - [structure \& interpretation of computer programs](#structure--interpretation-of-computer-programs)
   - [introduction](#introduction)
+  - [procedures \& process](#procedures--process)
 
 # structure & interpretation of computer programs
 
@@ -10,13 +11,9 @@
 ## todo  <!-- omit from toc -->
 
 ## introduction
+- > The key to understanding complicated things is to know what not to look at and what not to compute and what not to think
 - **declarative:** "what is true" knowledge, example: `y` is `sqrt(x)` if `y^2 = x`  
 **imperative:** "how to" knowledge, example: square-root by successive averaging of guess `g` & `x/g` until result doesn't change much
-- **procedure:** is the description/recipe of the process  
-**process:** is the result of applying a procedure to arguments  
-example: procedure is the blueprint, while process is the actual building construction
-- computer science deals with idealised components unlike physical system where one has to worry about constraints of tolerance, approximation & noise  
-so for building a large program there isn't much difference between what I can imagine & what I can build
 - **techniques for controlling complexity:** make building very large programs possible
   - **black-box abstraction:** putting something in a box to supress details to go ahead & build bigger boxes OR your "how-to" method is an instance of a more general thing, example: fixed point of a function (`f(y) = y`) by succesive applying `f(g)` until result doesn't change much can be used for square-root if `f(g)` is average of `g` & `x/g`
   - **conventional interfaces:** agreed upon ways of plugging things together, example: use `(* x (+ a b))` to add numbers, vectors, polynomial, analog signals etc
@@ -51,6 +48,15 @@ prefix notation `(+ x y)` used uniformly since it is more generic & can take mul
   square                       ; (lambda (x) (* x x)) (above define is syntactic sugar for this)
                                ; lambda (x) is to construct a procedure with argument x
   ```
+
+## procedures & process
+- **procedure:** is the description/recipe of the process  
+**process:** is the result of applying a procedure to arguments  
+example: procedure is the blueprint, while process is the actual building construction
+- computer science deals with idealised components unlike physical system where one has to worry about constraints of tolerance, approximation & noise  
+so for building a large program there isn't much difference between what I can imagine & what I can build
+- **formal parameter:** parameter written in function definition  
+**actual parameter:** parameter written in function call
 - **recursive definitions:** allows you to do infinite computations that go on until something is true
 - **example: square root by sucessive averaging:**
   ```lisp
@@ -118,9 +124,55 @@ prefix notation `(+ x y)` used uniformly since it is more generic & can take mul
       (if (= 0 0) 7 (+ (-1+ 0) (1+ 7)))
       7
       ```
-    - lambda expressions, definitions &
+    - lambda expressions, definitions
+- **peano arithmetic:** formalizes arithematic operations on natural numbers & their properties  
+there are two ways to add whole numbers, both are recursive definitions but lead to different process types: iteration & recursion  
+number of steps is approximation for time it takes to execute & width is the the space that needs to be remembered
+  - **iteration:** time `O(x)` (steps increase as `x` increases) & space `O(1)` (same width for any `x`)  
+  has all of its state in explicit variables (formal parameters), example: can continue the computation from `(+ 1 6)`  
+    ```lisp
+    (define (+ x y)
+      (if (= x 0)
+          y
+          (+ (-1+ x) (1+ y))))
+
+    (+ 3 4)
+    (+ 2 5)
+    (+ 1 6)
+    (+ 0 7)
+    7
+    ```
+  - **recursion:** time `O(x)` (steps increase as `x` increases) & space `O(x)` (deferred increments increase as `x` increases)  
+  has its state not just in explicit variables but some information belongs to computer as well, example: cannot continue the computation from `(+ 1 4)` without knowing about deferred increments
+    ```lisp
+    (define (+ x y)
+      (if (= x 0)
+          y
+          (1+ (+ (-1+ x) y))))
+
+    (+ 3 4)
+    (1+ (+ 2 4))
+    (1+ (1+ (+ 1 4)))
+    (1+ (1+ (1+ (+ 0 4))))
+    (1+ (1+ (1+ 4)))
+    (1+ (1+ 5))
+    (1+ 6)
+    7
+    ```
+  - typically, an iterative process passes the answer around as a parameter (the accumulator) in such a way that the last recursive call has no pending operations left  
+  ![](media/programming/recursion_vs_iteration.png)
+- **perturbation analysis:** making small changes to the program & see how it affects the process
+- **example: fibonacci numbers:** time is denoted by each node that the dotted arrow follows `O(fib(x))` & to go back from the tail node  to head node we have to remember all the intermediate nodes so space complexity is the longest path `O(n)`  
+this program consists of just two rules: break up something into two parts for `(> n 2)` & reduction for `(< n 2)`
+  ```lisp
+  ; [0] 1 1 2 3 5 8 13 21 34 . . .
+  (define (fib n)
+    if(< n 2)
+      n
+      (+ (fib (- n 1)) (fib (- n 2))))
+  ```  
+  ![](media/programming/fibonacci.png)
 
 
 
-
-- [continue](https://youtu.be/V_7mmwpgJHU?list=PLE18841CABEA24090&t=1026)
+- [continue](https://youtu.be/V_7mmwpgJHU?list=PLE18841CABEA24090&t=2834)
