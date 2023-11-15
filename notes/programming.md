@@ -187,4 +187,4 @@ this is possible through recursion because we always count down here & 0 high to
   ![](media/programming/towers_of_hanoi_1.png)  
   ![](media/programming/towers_of_hanoi_2.png)
 
-- [continue](https://youtu.be/V_7mmwpgJHU?list=PLE18841CABEA24090&t=2834)
+- [continue](https://www.youtube.com/watch?v=eJeMOEiHv8c&list=PLE18841CABEA24090&index=4)
