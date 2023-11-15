@@ -9,6 +9,7 @@
 - [scheme (lisp dialect) interpreter](https://inst.eecs.berkeley.edu/~cs61a/fa14/assets/interpreter/scheme.html)
 
 ## todo  <!-- omit from toc -->
+- [iterative process for fibonacci & towers of hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi#Iterative_solution)
 
 ## introduction
 - > The key to understanding complicated things is to know what not to look at and what not to compute and what not to think
@@ -172,7 +173,18 @@ this program consists of just two rules: break up something into two parts for `
       (+ (fib (- n 1)) (fib (- n 2))))
   ```  
   ![](media/programming/fibonacci.png)
-
-
+- **example: towers of hanoi:** move `n` disks from tower 'from' to tower `to` using an extra tower `spare`  
+suppose we know how to move `n-1` disks, then we move `n-1` disks to `spare`, `n`th disk to `to`, then `n-1` disks on top of `n`th in `to`  
+this is possible through recursion because we always count down here & 0 high tower requires no moves
+  ```lisp
+  (define (move n from to spare)
+    (cond ((= n 0) "done")
+          (else
+            (move (-1+ n) from spare to)     ; move "n-1" disks "from" to "spare" using "to" as spare
+            (single move n from to)          ; move "n"th disk "from" to "to"
+            (move (-1+ n) spare to from))))  ; move "n-1" disks "spare" to "to" using "from" as spare
+  ```  
+  ![](media/programming/towers_of_hanoi_1.png)  
+  ![](media/programming/towers_of_hanoi_2.png)
 
 - [continue](https://youtu.be/V_7mmwpgJHU?list=PLE18841CABEA24090&t=2834)
