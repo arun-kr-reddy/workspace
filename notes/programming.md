@@ -1,6 +1,7 @@
 - [structure \& interpretation of computer programs](#structure--interpretation-of-computer-programs)
   - [introduction](#introduction)
-  - [procedures \& process](#procedures--process)
+  - [procedures \& processes](#procedures--processes)
+  - [higher order procedures](#higher-order-procedures)
 
 # structure & interpretation of computer programs
 
@@ -47,10 +48,10 @@ prefix notation `(+ x y)` used uniformly since it is more generic & can take mul
   (define (square x) (* x x))  ; square (define procedure)
   (square (+ 1 4))             ; 25
   square                       ; (lambda (x) (* x x)) (above define is syntactic sugar for this)
-                               ; lambda (x) is to construct a procedure with argument x
+                               ; lambda is used to construct a procedure without a name specified
   ```
 
-## procedures & process
+## procedures & processes
 - **procedure:** is the description/recipe of the process  
 **process:** is the result of applying a procedure to arguments  
 example: procedure is the blueprint, while process is the actual building construction
@@ -104,7 +105,7 @@ so for building a large program there isn't much difference between what I can i
       (define (+ x y)
         (if (= x 0)
             y
-            (+ (-1+ x) (1+ y))))         ; -1+ is decrement operator & 1+ is the increment operator
+            (+ (-1+ x) (1+ y))))         ; "-1+" is decrement operator & "1+" is the increment operator
                                          ; counting down "x" till "y" is the sum
       (+ 3 4)                            ; 7
 
@@ -187,4 +188,78 @@ this is possible through recursion because we always count down here & 0 high to
   ![](media/programming/towers_of_hanoi_1.png)  
   ![](media/programming/towers_of_hanoi_2.png)
 
-- [continue](https://www.youtube.com/watch?v=eJeMOEiHv8c&list=PLE18841CABEA24090&index=4)
+## higher order procedures
+- whenever trying to make complicated systems and understand them, it is crucual to divide the things up into as many pieces as I can, each of which I understand separately  
+summation of integers & summation of squares have almost the same program with only term differing (`a` & `(square a)`), but we don't like repetition & no repetition means you only write it once (also only understand and debug it once)
+  ```lisp
+  ; Σ i, for i=a to i=b
+  (define (sum_int a b)
+    (if (> a b)
+      0
+      (+ a                       ; term
+         (sum_int (1 + a) b))))
+
+  ; Σ i^2, for i=a to i=b
+  (define (sum_sq a b)
+    (if (> a b)
+      0
+      (+ (square a)              ; term
+         (sum_sq (1 + a) b))))
+  ```
+- **example: generic summation:** a more general pattern for summation is  
+procedures are just another kind of data like numbers  
+procedure `sum` is encapsulated in other procedures, improving this will benefit all procedures using it
+  ```lisp
+  (define (sum term a next b)           ; "term" & next are procedural arguments
+    (if (> a b)
+      0
+      (+ (term a)                       ; "term" produces a value for a given index
+         (sum term 
+         (next a)                       ; "next" produces the next index
+         next 
+         b))))
+  
+  ; sum_int
+  (define (sum_int a b)
+    (define (identity a) a)
+    (sum identity a 1+ b))
+  
+  ; sum_sq
+  (define (sum_sq a b)
+    (define (square a) (* a a))
+    (sum square a 1+ b))
+  ```
+- **example: square-root using fixed point:**
+  ```lisp
+  ; square-root
+  (define (sqrt x)
+    (fixed_point 
+      (lamdba (y) (average (/ x y) y))
+      1))
+  
+  ; fixed-point
+  (define (fixed_point f start)
+    (define (iter old new)
+      (if (close_enough? old new)
+        new
+        (iter new (f new))))       ; "new" becomes old & "f(new)" becomes new
+    (iter start (f start)))
+  ```
+  - why should this converge?  
+    here for finding `(sqrt x)` (such that `y^2 = x` or its equivalent form `y = x/y`) we can search for the fixed point using `f(y) = x/y` (`(fixed_point (lambda (y) (/ x y)) 1)`)  
+    considering intial guess `y1`, this never converges, it keeps oscilating between `y1` & `y2` (`y2 = x/y1` -> `y3 = x/y2 = x/(x/y1) = y1`)  
+    average is used to damp out these oscillations
+    ```lisp
+    (define (sqrt x)
+      (fixed_point
+        (average_damp (lambda (y) (/ x y)))  ; procedure returned from averagfw_damp used as "f"
+        1))
+    
+    (define average_damp
+      (lambda (f)                            ; takes procedure as an argument
+        (lambda (x) (average (f x) x))))     ; & return procedure as a value
+    ```
+    
+
+
+- [continue](https://youtu.be/eJeMOEiHv8c?list=PLE18841CABEA24090&t=2610)
