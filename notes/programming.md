@@ -259,7 +259,31 @@ procedure `sum` is encapsulated in other procedures, improving this will benefit
       (lambda (f)                            ; takes procedure as an argument
         (lambda (x) (average (f x) x))))     ; & return procedure as a value
     ```
-    
+- **higher order procedures:** take procedural arguments & produce procedural values ot help us clarify & abstract some otherwise complicated processes
+- **example: netwon's method to find square roots:** used to find roots of a function  
+to find `y` such that `f(y) = 0`, start with a guess `y0` & iterate with `yn+1 = lim y->yn (y - f(y)/(df/dy))`
+  ```lisp
+  (define (sqrt x)
+    (newton (lambda (y) (- x (square y)))  ; if we know value of "y" for which "x - y^2 = 0" then "y = sqrt(x)"
+    1))
+  (define (newton f guess)
+    (define df (derive f)
+    (fixed_point
+      (lambda(x) (- x (/ (f x) (df x)))))  ; (x - f(x)/(df/dx))
+      guess))
+  (define deriv
+    (lambda (f)
+      (lambda (x)
+        (/ (- (f (+ x dx))                 ; (f(x+dx) - f(x))/dx
+           (f x))
+        dx))))
+  (define dx 0.00001)
+  ```
+- **top-down design:** allows us to use names of procedures that we haven’t defined yet while writing a program
+- **rights and privileges of first-class citizens:** Chris Strachey was advocate for making procedures/functions should be first class citizens in a programming language
+  - to be named by variables
+  - to be passed as arguments to procedures
+  - to be returned as values of procedures
+  - to be incorporating into data structures
 
-
-- [continue](https://youtu.be/eJeMOEiHv8c?list=PLE18841CABEA24090&t=2610)
+- [continue](https://youtu.be/DrFkf-T-6Co?list=PLE18841CABEA24090)
