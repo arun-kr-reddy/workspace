@@ -1,31 +1,33 @@
+# readme
 - [code](#code)
 - [notes](#notes)
   - [teachyourselfcs](#teachyourselfcs)
   - [CV DSP engineer](#cv-dsp-engineer)
   - [mouli list](#mouli-list)
+- [symbols](#symbols)
 
-# code
+## code
 ```bash
 cd .\build\
 cmake .. -G "Visual Studio 17 2022"
 ```
 
-# notes
+## notes
 
-## teachyourselfcs
+### teachyourselfcs
 - [ ] [programming](./notes/programming.md)
-- [x] [computer architecture](./notes/computer_architecture.md)
+- [ ] [computer architecture](./notes/computer_architecture.md)
 - [ ] [math](https://www.youtube.com/playlist?list=PLB7540DEDD482705B)
-- [ ] [algorithms & data structures](https://www.youtube.com/playlist?list=PLOtl7M3yp-DXbHTFe_w9zFPXeau28CDao)
   - [ ] [single variable calculus (MIT, 2007)](https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/)
-- [x] [operating systems](https://www.youtube.com/playlist?list=PLDW872573QAb4bj0URobvQTD41IV6gRkx)
+- [ ] [algorithms & data structures](https://www.youtube.com/playlist?list=PLOtl7M3yp-DXbHTFe_w9zFPXeau28CDao)
+- [ ] [operating systems](https://www.youtube.com/playlist?list=PLDW872573QAb4bj0URobvQTD41IV6gRkx)
 - [ ] [computer networking](https://www.youtube.com/playlist?list=PLoCMsyE1cvdWKsLVyf6cPwCLDIZnOj0NS)
 - [ ] [databases](https://www.youtube.com/playlist?list=PLhMnuBfGeCDPtyC9kUf_hG_QwjYzZ0Am1)
 - [ ] [languages & compilers](https://www.youtube.com/playlist?list=PLoCMsyE1cvdUZRe1udlyjpzTww1U5olL2)
 - [ ] [distributed systems](https://www.youtube.com/playlist?list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB)
 
-## [CV DSP engineer](https://www.linkedin.com/jobs/view/3750522402/?refId=843b889c-d744-4530-88c3-499182d331fb&trackingId=gUbvzY6uT3KyJl04K5WumQ%3D%3D)
-- [x] [C++](./notes/programming.md)
+### [CV DSP engineer](https://www.linkedin.com/jobs/view/3750522402/?refId=843b889c-d744-4530-88c3-499182d331fb&trackingId=gUbvzY6uT3KyJl04K5WumQ%3D%3D)
+- [ ] [C++](./notes/cpp.md)
   - [ ] OOPs concepts
 - [ ] tools
   - [ ] [git](http://rogerdudler.github.io/git-guide/)
@@ -51,8 +53,53 @@ cmake .. -G "Visual Studio 17 2022"
   - [ ] edge & blur artifact detection
 - [ ] Multi-threading programming
 
-## mouli list
+### mouli list
 - CPP (STL, template, memory layout & storage classes, pointers), DSA, OOPs, OS (pthread & cpp threads)
 - 23 design patterns (gang of 4), HLD, LLD & TDD (unit test cases (gtest), functional & integration testing), dynamic programming
 - git commands, linux (proc virtual folder, cron job/tab), scripting (bash or python)
 - **maybe:** cmake, gdb, gprof, valgrind, thread sanitizers, BOOST & opencv lib
+
+## symbols
+
+```sh
+⟵ ⟶ ⟷ ↑ ↓            # arrows
+±                       # plus minus
+:                       # such that
+∀                       # for all
+∴                       # therefore
+∵                       # since
+⊂                       # subset of
+∈                       # belongs to
+∪                       # union
+⇒                       # implies that
+⇔                       # if and only if
+≈                       # approximately equal
+≡                       # equivalent
+∝                       # proportional
+∞                       # infinity
+∞                       # infinity
+×                       # multiply
+∠                       # angle
+°                       # degree
+∆                       # delta
+∑                       # sigma
+·                       # dot product
+α                       # alpha
+β                       # beta
+γ                       # gamma
+δ                       # delta
+ε                       # epsilon
+θ                       # theta
+κ                       # kappa
+λ                       # lambda
+μ                       # mu
+π                       # pi
+σ                       # sigma
+τ                       # tau
+φ                       # phi
+ψ                       # psi
+ω                       # omega
+⦻                      # correlation
+∗                       # convolution
+                        # invisible character
+```

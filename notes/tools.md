@@ -1,10 +1,8 @@
-- [git](#git)
-  - [introduction](#introduction)
-
-# git
+# tools
+- [introduction](#introduction)
 
 ## links  <!-- omit from toc -->
 
 ## todo  <!-- omit from toc -->
 
-## introduction
+## git

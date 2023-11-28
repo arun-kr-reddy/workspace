@@ -1,7 +1,5 @@
-- [design of digital circuits](#design-of-digital-circuits)
-  - [introduction](#introduction)
-
-# design of digital circuits
+# computer architecture
+- [introduction](#introduction)
 
 ## links  <!-- omit from toc -->
 - [ETHZ 2018](https://www.youtube.com/playlist?list=PL5Q2soXY2Zi_QedyPWtRmFUJ2F8DdYP7l)

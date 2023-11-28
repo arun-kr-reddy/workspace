@@ -1,6 +1,7 @@
+#include <sstream>
+
 #include "common_defs.h"
 #include "map"
-#include <sstream>
 
 int main(void)
 {
@@ -21,7 +22,6 @@ int main(void)
         std::cout << "no" << std::endl;
     }
 
-
     // create string
     std::stringstream out_sstream;
     out_sstream << "pi" << 3.14;
@@ -34,4 +34,22 @@ int main(void)
     in_sstream >> str >> val;  // str: 'pi ', val: 3.14
 
     return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    int ret = fork();  // ret is child process PID
+
+    if (ret < 0)  // fork failed
+    {
+        printf("fork failed\n";)
+    }
+    else if (ret == 0)  // child process
+    {
+        printf("child process %d\n", getpid());
+    }
+    else  // parent process
+    {
+        printf("parent process %d of child %d\n", getpid(), ret);
+    }
 }
