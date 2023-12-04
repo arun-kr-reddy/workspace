@@ -3,7 +3,9 @@
 - [processes](#processes)
   - [process abstraction](#process-abstraction)
   - [process API](#process-api)
-  - [process execution mechanisms](#process-execution-mechanisms)
+  - [process execution mechanism](#process-execution-mechanism)
+  - [scheduling policies](#scheduling-policies)
+  - [inter-process communication](#inter-process-communication)
 - [memory](#memory)
 - [concurrency](#concurrency)
 - [I/O and filesystems](#io-and-filesystems)
@@ -114,68 +116,75 @@ OS maintains a data structure (made up of PCBs) of all active processes
   common commands like `ls` are all executables that are exec'ed by the shell  
   `ls > foo.txt` shell rewires stdout of child to file then calls exec on the child
 
-[continue](https://www.youtube.com/watch?v=RxLJvh-nzQ8&list=PLDW872573QAb4bj0URobvQTD41IV6gRkx&index=4)
-
-### process execution mechanisms
-**function call working:**
-1. translates to jump instruction
-2. new stack frame pushed and SP updated, stack frame contains arguments, return value, etc
-3. function instructions executed
-4. stack frame popped
-5. PC now holding return address
-
-**system call difference:**
-1. CPU hardware has multiple priviledge levels - user mode (user code) & kernel mode (system calls), some instructions execute only in kernel mode
-2. kernel does not trust user stack, uses seperate kernel stack in kernel mode
-3. kernel does not trust user provided addresses to jump to, interrupt descriptor table (IDT) has addresses of kernel functions to run for system calls & other events (set up at boot time)
-
-**system call working:**
-1. when system call is made, special trap instruction is run (hidden from user by libc)
-2. this will move CPU to higher priviledge level, switch to kernel stack, save user context on kernel stack, look up IDT and jump to trap handler function in OS code
-3. trap usecases: system call (program needs OS service), program fault (program does something illegal) & interrupt (external device needs attention of OS)
-4. number stored in a CPU register before calling trap to identify which IDT entry to use
-5. when OS is done, it calls special return-from-trap instruction
-6. this will restore user context on kernel stack, change CPU priviledge from kernel mode to user mode, restore PC and jump to user code after trap
-7. before returning to user mode, OS checks if it must switch to different process (context switch), why - process exited or terminated (program fault), process made blocking system call (waiting for disk data), process has run for too long (CPU timesharing)
-
-**CPU scheduler mechanism types:**
-1. **non-preemptive (cooperative):** switch only if process blocked or terminated
-2. **preemptive (non-cooperative):** switch even when process is ready to continue, CPU generated periodic timer interrupt, after servicing interrupt OS checks if current process has run for too long
-
-**CPU scheduler mechanism working:**
-1. process A has moved from use to kernel mode, OS has decided it must switch from process A to B
-2. save kernel context of A on kernel stack
-3. swicth SP to kernel stack of B
-4. restore kernel context from B's kernel stack (stored when B was switched out)
-5. now CPU running B in kernel mode, return-from-trap to user mode of B
-
-**user context:** when going from user mode to kernel mode, saved on kernel stack by trap instruction  
+### process execution mechanism
+- **function call working:**
+  - translates to jump instruction
+  - new stack frame pushed and `SP` updated, stack frame contains arguments, return value, etc
+  - function instructions executed
+  - stack frame popped
+  - PC now holding return address
+- **system call difference:**
+  - CPU hardware has multiple privilege levels: user mode (user code) & kernel mode (OS calls)  
+  some instructions can execute only in kernel mode
+  - kernel does not trust user stack, seperate kernel stack used in kernel mode
+  - kernel does not trust user provided addresses to jump to  
+  interrupt descriptor table (IDT) has addresses of kernel functions to run for system calls & other events (set up at boot time)
+- **system call working:**
+  - special trap instruction is run when system call is made (hidden from user by libc)  
+  this will move CPU to higher privilege level, switch to kernel stack, save user context on kernel stack, look up IDT and jump to trap handler function in OS code
+  - trap usecases
+    - system call: program needs OS service
+    - program fault: program does something illegal, example: access memory it doesn't have access to
+    - interrupt: external device needs attention of OS, example: network packet arrived on network card
+  - before calling trap, a number stored in a CPU register to identify which IDT entry to use
+  - when OS is done, it calls special return-from-trap instruction  
+  this will restore user context on kernel stack, change CPU privilege from kernel mode to user mode, restore PC and jump to user code after trap
+  - before returning to user mode, OS checks if it must switch to different process (context switch)
+    - process has exited or must be terminated (program fault)
+    - process made a blocking system call (waiting for disk data)
+    - process has run for too long (CPU timesharing)
+- **CPU scheduler mechanism types:**
+  - **non-preemptive (cooperative):** switch only if process blocked or terminated
+  - **preemptive (non-cooperative):** switch even when process is ready to continue  
+  CPU generates periodic timer interrupt, after servicing this interrupt OS checks if current process has run for too long
+- **CPU scheduler mechanism working:**
+  - process A has moved from user to kernel mode, OS has decided it must switch from process A to B
+  - save kernel context of A on kernel stack
+  - switch SP to kernel stack of B
+  - restore kernel context from B's kernel stack (stored when B was switched out)
+  - now CPU running B in kernel mode, return-from-trap to switch to user mode of B
+- **user context:** when going from user mode to kernel mode, saved on kernel stack by trap instruction  
 **kernel context:** during context switch, saved on kernel stack by context switching code
 
-**CPU scheduler policy goals:**
-1. maximize utilization: fraction of time CPU is used
-2. minimize average turnaround time: time from process arrival to completion
-3. minimize average response time: time from process arrival to first scheduling
-4. fairness: all processes must be treated equally
-5. minimize overhead: run process long enough to reduce cost of context switch (~1ms)
+### scheduling policies
+- **CPU burst:** CPU time used by a process in a continuous stretch, counted as a fresh burst if a process comes back after a I/O wait
+- **CPU scheduler policy goals:**
+  - maximize utilization: fraction of time CPU is used
+  - minimize average turnaround time: time from process arrival to completion
+  - minimize average response time: time from process arrival to first scheduling
+  - fairness: all processes must be treated equally
+  - minimize overhead: run process long enough to reduce cost of context switch (~1ms)
+- **CPU scheduler policies:** on context switch based on CPU burst which process to run next
+  - **first come first serve (FCFS):** process job in the order they are received  
+  convoy effect: stuck behind long process so high turnaround time
+  - **shortest job first (SJF):** process job with shorted execution time, is non-preemptive so can stil get stuck if shorter jobs arrive when long process executing
+  - **shortest remaining time first (SRTF):** preemptive version of SJF (preempts running job), process job closest to completion  
+  also known as shortest time to completion first (STFC)
+  - **round robin (RR):** each job processed for a fixed time slice, preemptive, slice big enough to reduce context switch cost, good for response time & fairness, bad for turnaround time
+  - **multi level feedback queue (MLFQ):** used in linux, many queues in order of priority, process from highest prioriy queue, within same priority any algorithm like RR, priority of process reduces with its age
 
-**CPU scheduler policies:** on context switch which process to run next, based on CPU time used by a process in a continuous stretch (CPU burst)
-1. **first come first serve (FCFS):** process job in the order they are received, convoy effect: stuck behind long process so high turnaround time
-2. **shortest job first (SJF):** process job with shorted execution time, non-preemptive so can stil get stuck if long process executing, bad response time
-3. **shortest remaining time first (SRTF):** preemptive version of SJF (preempts running job), process job closest to completion
-4. **round robin (RR):** each job processed for a fixed time slice, preemptive, slice big enough to reduce context switch cost, good for response time & fairness, bad for turnaround time
-5. **multi lebel feedback queue (MLFQ):** used in linux, many queues in order of priority, process from highest prioriy queue, within same priority any algorithm like RR
+### inter-process communication
+- **inter-process communication (IPC):** mechanisms to share information between processes, processes do not share any memory with each other
+  -  **shared memory:** both processes can read/write same region of memory via `int shmget(key,size, shmflg)` system call to communicate, by providing same key two processes can get same segment of memory
+  -  **signals:** can be sent to a process by OS or another process, some signals have fixed meaning (`ctrl + C` send `SIGINT` signal), every process has a default code to execute for each signal (signal handler) like exit on terminate signal, some signal handlers can be overriden to do other things
+  -  **sockets:** can be used for two processes on same machine (Unix sockets) or different machine (TCP/UDP sockets) to communicate, two processes open sockets and connect them to each other, messages written into one socket can be read from another, OS transfers data across socket buffers
+  -  **pipes:** one-way communication (half-duplex), pipe system call returns two handles (file descriptors), data written in write handle can be read through read handle, pipe data buffered in OS buffers between read & write
+     - **regular pipes:** both file descriptor are in same process, parent & child share file descriptor after fork, parent uses one end and child uses other end
+     - **named pipes:** two endpoints in different processes
+  - **message queue:** mailbox abstraction, process can open a mailbox at a specified location, processes can send/receive messages from mailbox, OS buffers messages between send & receive
+- **blocking vs non-blocking communication:** some IPC actions like reading from empty socket/pipe/message queue or writing to full socket/pipe/message queue can block, system calls to read/write have versions that return error code instead of blocking
 
-**inter-process communication (IPC):** mechanisms to share information between processes, processes do not share any memory with each other
-1. **shared memory:** both processes can access same region of memory, via `int shmget(key,size, shmflg)` system call, by providing same key two processes can get same segment of memory, can read/write memory to communicate
-2. **signals:** can be sent to a process by OS or another process, some signals have fixed meaning (`ctrl + C` send `SIGINT` signal), every process has a default code to execute for each signal (signal handler) like exit on terminate signal, some signal handlers can be overriden to do other things
-3. **sockets:** can be used for two processes on same machine (Unix sockets) or different machine (TCP/UDP sockets) to communicate, processes open sockets and connect them to each other, messages written into one socket can be read from another, OS transfers data across socket buffers
-4. **pipes:** one-way communication (half-duplex), pipe system call returns write handle & read handle file descriptors, data written in one file descriptor can be read through another file descriptor, pipe data buffered in OS buffers between read & write
-   1. **regular pipes:** both file descriptor are in same process, parent & child share file descriptor after fork, parent uses one end and child uses other end
-   2. **named pipes:** two endpoints in different processes
-5. **message queue:** process can open mailbox at a specified location, processes can send/receive messages from mailbox, OS buffers messages between send & receive
-
-**blocking vs non-blocking communication:** system calls to read/write have versions that block or can return with error code in case of failure, like reading from empty socket/pipe/message queue or writing to full socket/pipe/message queue
+[continue](https://www.youtube.com/watch?v=2Xj2V8kYNWM&list=PLDW872573QAb4bj0URobvQTD41IV6gRkx&index=7)
 
 ## memory
 
@@ -200,7 +209,7 @@ OS maintains a data structure (made up of PCBs) of all active processes
 
 **OS address space:** OS is not a seperate process with its own address space, instead OS code is part of the address space of every process, page table maps OS addresses to OS code
 
-**address translation in simplified OS:** places entire memory image in one chunk, OS tells MMU the base (starting address) & bound (total size of process) values (needs priviledged mode), MMU calculates PA from VA, MMU also checks if address is beyond bound, generates faults and traps to OS if access illegal (VA out of bound), OS updates translation information upon context switch
+**address translation in simplified OS:** places entire memory image in one chunk, OS tells MMU the base (starting address) & bound (total size of process) values (needs privileged mode), MMU calculates PA from VA, MMU also checks if address is beyond bound, generates faults and traps to OS if access illegal (VA out of bound), OS updates translation information upon context switch
 ```
 PA = VA + base
 assert (PA < VA + base + bound)
@@ -644,7 +653,7 @@ pthread_mutex_unlock(prevention);  // end
 2. **character devices:** produce/consume stream of bytes (keyboard)
 
 **OS read/write to registers:**
-1. **explicit I/O instructions:** priviledged instruction used by OS to read & write to specific registers on device, example - on x86 `in` & `out`
+1. **explicit I/O instructions:** privileged instruction used by OS to read & write to specific registers on device, example - on x86 `in` & `out`
 2. **memory mapped I/O:** device makes registers appear like memory locations, OS simply reads/writes from memory (part of address space reserved for I/O devices), memory hardware routes accesses to these special memoru addresses to devices
 
 **example: simple execution of I/O requests:** polling status to see if device ready wastes CPU cycles, CPU explicitly copies data to/from device (programmed I/O)
