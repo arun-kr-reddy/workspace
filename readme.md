@@ -14,21 +14,22 @@ cmake .. -G "Visual Studio 17 2022"
 
 ## notes
 
-### teachyourselfcs
 - [ ] [programming](./notes/programming.md)
 - [ ] [computer architecture](./notes/computer_architecture.md)
+- [ ] [operating systems](./notes/operating_system.md)
+- [ ] [C++](./notes/cpp.md)
+
+### teachyourselfcs
 - [ ] [math](https://www.youtube.com/playlist?list=PLB7540DEDD482705B)
-  - [ ] [single variable calculus (MIT, 2007)](https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/)
+  - [ ] [single variable calculus](https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/)
 - [ ] [algorithms & data structures](https://www.youtube.com/playlist?list=PLOtl7M3yp-DXbHTFe_w9zFPXeau28CDao)
-- [ ] [operating systems](https://www.youtube.com/playlist?list=PLDW872573QAb4bj0URobvQTD41IV6gRkx)
 - [ ] [computer networking](https://www.youtube.com/playlist?list=PLoCMsyE1cvdWKsLVyf6cPwCLDIZnOj0NS)
 - [ ] [databases](https://www.youtube.com/playlist?list=PLhMnuBfGeCDPtyC9kUf_hG_QwjYzZ0Am1)
 - [ ] [languages & compilers](https://www.youtube.com/playlist?list=PLoCMsyE1cvdUZRe1udlyjpzTww1U5olL2)
 - [ ] [distributed systems](https://www.youtube.com/playlist?list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB)
 
 ### [CV DSP engineer](https://www.linkedin.com/jobs/view/3750522402/?refId=843b889c-d744-4530-88c3-499182d331fb&trackingId=gUbvzY6uT3KyJl04K5WumQ%3D%3D)
-- [ ] [C++](./notes/cpp.md)
-  - [ ] OOPs concepts
+- [ ] OOPs concepts
 - [ ] tools
   - [ ] [git](http://rogerdudler.github.io/git-guide/)
     - [ ] [git parable](https://www.youtube.com/watch?v=jm7QsI-nNjk)
